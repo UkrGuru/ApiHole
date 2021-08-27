@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 using System.Threading.Tasks;
 using UkrGuru.ApiHole.Helpers;
 using UkrGuru.SqlJson;
@@ -32,44 +33,32 @@ namespace UkrGuru.ApiHole
             return Ok(response);
         }
 
-        // GET: <proc>
+        [Authorize]
         [HttpGet("{proc}")]
-        [Authorize]
-        public async Task<string> Get(string proc)
+        public async Task<string> Get(string proc, string data = null)
         {
-            return await _db.FromProcAsync($"{_prefix}{proc}");
+            try
+            {
+                return await _db.FromProcAsync($"{_prefix}{proc}", data);
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}. Proc={proc}";
+            }
         }
 
-        // GET <proc>/<id>
-        [HttpGet("{proc}/{id}")]
         [Authorize]
-        public async Task<string> Get(string proc, string id)
-        {
-            return await _db.FromProcAsync($"{_prefix}{proc}", id);
-        }
-
-        // POST <proc>
         [HttpPost("{proc}")]
-        [Authorize]
-        public async Task<string> Post(string proc, [FromBody] string item)
+        public async Task<dynamic> Post(string proc, [FromBody] dynamic data = null)
         {
-            return await _db.FromProcAsync($"{_prefix}{proc}", item);
-        }
-
-        // PUT <proc>/<id>
-        [HttpPut("{proc}/{id}")]
-        [Authorize]
-        public async Task Put(string proc, string id, [FromBody] string item)
-        {
-            await _db.ExecProcAsync($"{_prefix}{proc}", item);
-        }
-
-        // DELETE <proc>/<id>
-        [HttpDelete("{proc}/{id}")]
-        [Authorize]
-        public async Task Delete(string proc, string id)
-        {
-            await _db.ExecProcAsync($"{_prefix}{proc}", id);
+            try
+            {
+                return await _db.FromProcAsync<dynamic>($"{_prefix}{proc}", (object)data == null ? null : data);
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}. Proc={proc}";
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace UkrGuru.ApiHole.Helpers
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Skip(1).FirstOrDefault();
 
             if (token != null) attachLoginToContext(context, token);
 
@@ -33,9 +33,9 @@ namespace UkrGuru.ApiHole.Helpers
         {
             try
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
+ 
+                new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),

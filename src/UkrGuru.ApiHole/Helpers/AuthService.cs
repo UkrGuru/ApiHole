@@ -12,10 +12,7 @@ namespace UkrGuru.ApiHole.Helpers
     {
         private readonly AppSettings _appSettings;
 
-        public AuthService(IOptions<AppSettings> appSettings)
-        {
-            _appSettings = appSettings.Value;
-        }
+        public AuthService(IOptions<AppSettings> appSettings) => _appSettings = appSettings.Value;
 
         public string Authenticate([FromBody]string apiholekey)
         {
@@ -29,16 +26,15 @@ namespace UkrGuru.ApiHole.Helpers
         private string generateJwtToken(string email)
         {
             // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.SecurityKey));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("LoginEmail", email) }),
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var handler = new JwtSecurityTokenHandler();
+            return handler.WriteToken(handler.CreateToken(tokenDescriptor));
         }
     }
 }
