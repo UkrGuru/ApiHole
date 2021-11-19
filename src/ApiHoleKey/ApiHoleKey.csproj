@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>UkrGuru.ApiHole</AssemblyName>
+    <RootNamespace>UkrGuru.ApiHole</RootNamespace>
+    <Authors>Oleksandr Viktor (UkrGuru)</Authors>
+    <Company>Oleksandr Viktor (UkrGuru)</Company>
+    <Copyright>Oleksandr Viktor (UkrGuru)</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UkrGuru.SqlJson" Version="3.2.0" />
+  </ItemGroup>
+
+</Project>

@@ -8,8 +8,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var login = (string)context.HttpContext.Items["LoginEmail"];
-        if (login == null)
+        if ((string)context.HttpContext.Items["LoginEmail"] == null)
         {
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }

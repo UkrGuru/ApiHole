@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using UkrGuru.ApiHole.Helpers;
 
 namespace UkrGuru.ApiHole
@@ -21,27 +19,18 @@ namespace UkrGuru.ApiHole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCompression(opts =>
-            {
-                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                    new[] { "application/octet-stream" });
-            });
-
             services.AddSqlJson(Configuration.GetConnectionString("SqlJsonConnection"));
 
-            services.AddCors();
+            //services.AddCors();
             services.AddControllers();
-
+            
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
             services.AddScoped<AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCompression();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -51,12 +40,14 @@ namespace UkrGuru.ApiHole
 
             app.UseRouting();
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            //app.UseCors(x => x
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
 
             app.UseMiddleware<JwtMiddleware>();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

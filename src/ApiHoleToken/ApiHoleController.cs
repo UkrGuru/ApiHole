@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Copyright (c) Oleksandr Viktor (UkrGuru). All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -11,13 +14,13 @@ namespace UkrGuru.ApiHole
     [Route("")]
     public class DefaultController : ControllerBase
     {
-        private readonly string _prefix;
+        private readonly string _procprefix;
         private readonly AuthService _auth;
         private readonly DbService _db;
 
         public DefaultController(IOptions<AppSettings> appSettings, AuthService auth, DbService db)
         {
-            _prefix = appSettings.Value.ApiProcPefix;
+            _procprefix = appSettings.Value.ApiProcPefix;
             _auth = auth;
             _db = db;
         }
@@ -39,7 +42,7 @@ namespace UkrGuru.ApiHole
         {
             try
             {
-                return await _db.FromProcAsync($"{_prefix}{proc}", data);
+                return await _db.FromProcAsync($"{_procprefix}{proc}", data);
             }
             catch (Exception ex)
             {
@@ -53,7 +56,7 @@ namespace UkrGuru.ApiHole
         {
             try
             {
-                return await _db.FromProcAsync<dynamic>($"{_prefix}{proc}", (object)data == null ? null : data);
+                return await _db.FromProcAsync<dynamic>($"{_procprefix}{proc}", (object)data == null ? null : data);
             }
             catch (Exception ex)
             {
