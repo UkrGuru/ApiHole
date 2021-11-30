@@ -13,23 +13,21 @@ namespace UkrGuru.ApiHole
     [Route("")]
     public class DefaultController : ControllerBase
     {
+        private readonly DbService _db;
         private readonly string _procprefix;
         private readonly string _apiholekey;
-        private readonly DbService _db;
 
-        public DefaultController(IOptions<AppSettings> appSettings, DbService db)
+        public DefaultController(DbService db, IOptions<AppSettings> appSettings)
         {
-            _procprefix = appSettings.Value.ApiProcPefix;
-            _apiholekey = appSettings.Value.ApiHoleKey;
             _db = db;
+            _apiholekey = appSettings.Value.ApiHoleKey;
+            _procprefix = appSettings.Value.ApiProcPefix;
         }
 
         private void CheckAccess()
         {
             if (!string.IsNullOrEmpty(_apiholekey) && Request.Headers["ApiHoleKey"] != _apiholekey)
-            {
                 throw new Exception("Access is denied");
-            }
         }
 
         [HttpGet("{proc}")]

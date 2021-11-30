@@ -6,8 +6,13 @@
     <RootNamespace>UkrGuru.ApiHole</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="UkrGuru.SqlJson" Version="3.2.0" />
+    <PackageReference Include="UkrGuru.SqlJson" Version="3.3.0" />
   </ItemGroup>
 
 </Project>

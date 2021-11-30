@@ -14,15 +14,15 @@ namespace UkrGuru.ApiHole
     [Route("")]
     public class DefaultController : ControllerBase
     {
-        private readonly string _procprefix;
         private readonly AuthService _auth;
         private readonly DbService _db;
+        private readonly string _procprefix;
 
-        public DefaultController(IOptions<AppSettings> appSettings, AuthService auth, DbService db)
+        public DefaultController(AuthService auth, DbService db, IOptions<AppSettings> appSettings)
         {
-            _procprefix = appSettings.Value.ApiProcPefix;
             _auth = auth;
             _db = db;
+            _procprefix = appSettings.Value.ApiProcPefix;
         }
 
         [HttpPost("authenticate")]

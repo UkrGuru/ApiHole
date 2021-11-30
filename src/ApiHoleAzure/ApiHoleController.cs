@@ -16,15 +16,15 @@ namespace UkrGuru.ApiHole
     [Route("")]
     public class DefaultController : ControllerBase
     {
-        private readonly string _procprefix;
         private readonly DbService _db;
+        private readonly string _procprefix;
 
-        public DefaultController(IOptions<AppSettings> appSettings, DbService db)
+        public DefaultController(DbService db, IOptions<AppSettings> appSettings)
         {
-            _procprefix = appSettings.Value.ApiProcPefix;
             _db = db;
+            _procprefix = appSettings.Value.ApiProcPefix;
         }
-        
+
         // The Web API will only accept tokens 1) for users, and 2) having the "access_as_user" scope for this API
         static readonly string[] scopeRequiredByApi = new string[] { "access_as_user" };
 
